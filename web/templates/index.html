@@ -13,7 +13,7 @@
     <h1 class="display-5">Ввод категорий</h1>
     <form>
         <div class="rows">
-            <div class="form-row template hide">
+            <div class="form-row template d-none">
                 <div class="form-group col-6">
                     <input name="pattern" class="form-control" placeholder="Название">
                     <input type="hidden" name="id">
@@ -28,7 +28,11 @@
             </div>
         </div>
         <div class="form-row">
-            <button class="btn btn-success">Отправить</button>
+            <button class="btn btn-success" id="subm">Отправить</button>
+        </div>
+
+        <div class="alert d-none alert-info">
+            <p>Данные были успешно обновлены</p>
         </div>
     </form>
 </div>
@@ -36,10 +40,18 @@
 <script src="static/select2.full.min.js"></script>
 <script src="static/main.js"></script>
 <script>
-    let form = new Form("{{base_url}}");
+    let form = new Form("{{base_url}}", "{{rc_id}}");
     form.init();
 
+    $('#subm').on('click', function () {
+        let data = form.serialize();
 
+        form.send_data(data, function () {
+            $('.alert').show();
+        });
+
+        return false;
+    });
 </script>
 </body>
 </html>

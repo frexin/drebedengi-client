@@ -14,23 +14,15 @@ class ReceiptModel:
 
     def get_receipt(self):
         query = "SELECT * FROM receipts WHERE id = %(id)s LIMIT 1"
+        cursor = self._run_query(query, {'id': self.id}, True)
 
-        cursor = self.conn.cursor(dictionary=True)
-        cursor.execute(query, {'id': self.id})
-
-        receipt = cursor.fetchone()
-
-        return receipt
+        return cursor.fetchone()
 
     def get_categories(self):
         query = "SELECT id, name FROM categories ORDER BY id"
+        cursor = self._run_query(query)
 
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-
-        categories = cursor.fetchall()
-
-        return categories
+        return cursor.fetchall()
 
     def get_items(self, without_cat=False):
         query = "SELECT ri.id, ri.name, quantity, price, cat_id, c.name as category FROM receipts_items ri " \
@@ -39,23 +31,26 @@ class ReceiptModel:
         if without_cat:
             query += " AND cat_id IS NULL"
 
-        cursor = self.conn.cursor(dictionary=True)
-        cursor.execute(query, {'rec': self.id})
+        cursor = self._run_query(query, {'rec': self.id}, True)
 
-        rows = cursor.fetchall()
-
-        return rows
+        return cursor.fetchall()
 
     def attach_category(self, pattern, cat_id, item_id):
         query = "INSERT INTO patterns (pattern, category_id) VALUES (%s, %s)"
 
         try:
-            cursor = self.conn.cursor()
-            cursor.execute(query, (pattern, cat_id))
-
+            self._run_query(query, (pattern, cat_id))
             query = "UPDATE receipts_items SET cat_id = %s WHERE id = %s"
-            cursor.execute(query, (cat_id, item_id))
+            self._run_query(query, (cat_id, item_id))
 
-            self.conn.commit()
         except Error as error:
             print(error)
+
+    def _run_query(self, query, params=None, is_dict=False):
+        # self.conn.reconnect()
+
+        cursor = self.conn.cursor(dictionary=is_dict)
+        cursor.execute(query, params)
+
+        return cursor
+

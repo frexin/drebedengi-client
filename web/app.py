@@ -8,14 +8,15 @@ conn = mysql.connector.connect(host=c.host, database=c.database, user=c.user, pa
 receipt_model = ReceiptModel(conn)
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     receipt_id = request.args.get('receipt_id')
 
-    url = c.url + '/get?receipt_id=' + receipt_id
+    url = c.url
     categories = receipt_model.get_categories()
 
-    return render_template('index.html', base_url=url, cats=categories)
+    return render_template('index.html', base_url=url, cats=categories, rc_id=receipt_id)
 
 
 @app.route("/get")
