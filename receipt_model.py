@@ -1,4 +1,4 @@
-from mysql.connector import MySQLConnection, Error
+from mysql.connector import Error
 
 
 class ReceiptModel:
@@ -22,9 +22,19 @@ class ReceiptModel:
 
         return receipt
 
+    def get_categories(self):
+        query = "SELECT id, name FROM categories ORDER BY id"
+
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+
+        categories = cursor.fetchall()
+
+        return categories
+
     def get_items(self, without_cat=False):
         query = "SELECT ri.id, ri.name, quantity, price, cat_id, c.name as category FROM receipts_items ri " \
-                "INNER JOIN categories c ON ri.cat_id = c.id WHERE receipt_id = %(rec)s"
+                "LEFT JOIN categories c ON ri.cat_id = c.id WHERE receipt_id = %(rec)s"
 
         if without_cat:
             query += " AND cat_id IS NULL"
