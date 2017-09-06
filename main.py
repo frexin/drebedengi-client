@@ -19,4 +19,4 @@ receipt_model.set_id(7)
 
 client = Drebedengi(c.duser, c.dpassword)
 # client.create_file(receipt_model)
-client.send_csv('02_09_2017_11_07_072005134127.txt')
+client.send_csv('06_09_2017_02_39_371104604864.txt')

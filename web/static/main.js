@@ -24,10 +24,9 @@ class Form {
     }
 
     render_fields() {
-        let form_row = $('div.template').clone().removeClass('d-none');
-
         for (let i in this.items) {
             let item = this.items[i];
+            let form_row = $('div.template').clone().removeClass('d-none template');
 
             $('input[name=pattern]', form_row).val(item['name']);
             $('input[name=id]', form_row).val(item['id']);
@@ -57,7 +56,7 @@ class Form {
     }
 
     send_data(data, callback) {
-        let url = this.base_url + '/update';
+        let url = this.base_url + '/update?receipt_id=' + this.rcid;
 
         $.ajax(url, {
             'data' : JSON.stringify(data),

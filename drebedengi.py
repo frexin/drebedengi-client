@@ -43,9 +43,10 @@ class Drebedengi:
         f = open(filename, 'w', encoding='utf-8')
 
         for item in receipt_items:
-            price = round(item['price'] / 100, 2) * -1
+            price = round((item['price'] * float(item['quantity'])) / 100, 2) * -1
+            name = item['name'] + ' ' + str(item['quantity']) + ' шт.'
             line = [str(price), 'руб', item['category'], 'Тинькоф', receipt_data['dt_create'].strftime('%Y-%m-%d %H:%M'),
-                    item['name'], '', '1']
+                    name, '', '1']
 
             str_line = ';'.join(line)
             f.write(str_line + '\n')
@@ -57,10 +58,8 @@ class Drebedengi:
     def logged_in(self):
         return self.session != None
 
-
     def get_categories(self):
         return self.categories
-
 
     def send_csv(self, filename):
         data = {
