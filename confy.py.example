@@ -1,8 +1,0 @@
-host = "localhost"
-user = "root"
-password = ""
-database = "drebedengi"
-url = "http://127.0.0.1:5000"
-
-duser = "mail@mail.ru"
-dpassword = "12345"

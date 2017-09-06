@@ -1,12 +1,23 @@
 from flask import Flask, request, render_template
 import mysql.connector
 import json
+import threading
 import config as c
 from receipt_model import ReceiptModel
+from driveclient import DriveClient
 
 conn = mysql.connector.connect(host=c.host, database=c.database, user=c.user, password=c.password)
 receipt_model = ReceiptModel(conn)
+drive_client = DriveClient(c, receipt_model)
+
 app = Flask(__name__)
+
+
+def monitor_files():
+    new_files = drive_client.download_new_files()
+    print(new_files)
+
+    threading.Timer(30, monitor_files).start()
 
 
 @app.route("/")
@@ -43,4 +54,5 @@ def attach_categories():
 
     return "OK"
 
+monitor_files()
 app.run()

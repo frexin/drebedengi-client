@@ -24,6 +24,12 @@ class ReceiptModel:
 
         return cursor.fetchall()
 
+    def get_receipts(self):
+        query = "SELECT id, dt_create, dt_process, shop_name, total_amount, doc_number, filename FROM receipts "
+        cursor = self._run_query(query, None, True)
+
+        return cursor.fetchall()
+
     def get_items(self, without_cat=False):
         query = "SELECT ri.id, ri.name, quantity, price, cat_id, c.name as category FROM receipts_items ri " \
                 "LEFT JOIN categories c ON ri.cat_id = c.id WHERE receipt_id = %(rec)s"
@@ -47,10 +53,13 @@ class ReceiptModel:
             print(error)
 
     def _run_query(self, query, params=None, is_dict=False):
-        # self.conn.reconnect()
+        if not self.conn.is_connected():
+            self.conn.reconnect()
 
-        cursor = self.conn.cursor(dictionary=is_dict)
+        cursor = self.conn.cursor(dictionary=is_dict, buffered=True)
         cursor.execute(query, params)
+
+        self.conn.commit()
 
         return cursor
 

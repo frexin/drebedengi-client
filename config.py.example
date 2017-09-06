@@ -1,0 +1,16 @@
+import os
+
+host = "localhost"
+user = "root"
+password = ""
+database = "drebedengi"
+url = "http://127.0.0.1:5000"
+
+duser = "sks89@mail.ru"
+dpassword = "9336966"
+
+ms_app_id = "ca90a826-dc68-42b6-8fe9-07d9068dc728"
+ms_secret = "KGwyWB5CisANqAHzdG7nWsO"
+folder_id = "53E99255798DE9CE!1583"
+
+download_path = os.path.dirname(os.path.realpath(__file__)) + os.sep + 'receipts'

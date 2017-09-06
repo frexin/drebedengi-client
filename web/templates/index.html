@@ -47,7 +47,7 @@
         let data = form.serialize();
 
         form.send_data(data, function () {
-            $('.alert').show();
+            $('.alert').removeClass('d-none');
         });
 
         return false;
