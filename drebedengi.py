@@ -65,17 +65,15 @@ class Drebedengi:
     def send_csv(self, filename):
         data = {
             'imp_fmt': 'imp_in_fmt',
-            'csvFile': (filename,
-                        open(filename, 'rb'),
-                        'text/csv')
-
+            'csvFile': (filename, open(filename, 'rb'), 'text/csv')
         }
+
         r = self.session.post(http_csv_send_url, files=data)
         post1 = r.status_code
         r = self.session.post(http_csv_confirm_url)
         post2 = r.status_code
 
-        if post1 == 200 and post2 == 200:       # TODO: improve error checking by page content
+        if post1 == 200 and post2 == 200:
             print("Successfully imported!")
             return True
         else:

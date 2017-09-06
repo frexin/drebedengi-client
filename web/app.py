@@ -2,20 +2,39 @@ from flask import Flask, request, render_template
 import mysql.connector
 import json
 import threading
+import os
 import config as c
 from receipt_model import ReceiptModel
 from driveclient import DriveClient
+from receipt import ReceiptProcessor
+from push import PushoverClient
 
 conn = mysql.connector.connect(host=c.host, database=c.database, user=c.user, password=c.password)
+
 receipt_model = ReceiptModel(conn)
 drive_client = DriveClient(c, receipt_model)
+rc_processor = ReceiptProcessor(conn)
+pushover = PushoverClient(c.push_ukey, c.push_token, c.url)
 
 app = Flask(__name__)
 
 
+def import_files(files):
+    for file in files:
+        filepath = c.download_path + os.sep + file
+        rc_processor.set_file(filepath)
+        rc_processor.process_file()
+
+        rc_dict = rc_processor.rc_dict
+        pushover.send_url(rc_dict)
+
+
 def monitor_files():
     new_files = drive_client.download_new_files()
-    print(new_files)
+
+    if len(new_files):
+        print('Found new files: ' + str(len(new_files)))
+        import_files(new_files)
 
     threading.Timer(30, monitor_files).start()
 
