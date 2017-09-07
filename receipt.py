@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 import os
 import re
 from mysql.connector import MySQLConnection, Error

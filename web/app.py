@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from flask_cors import CORS
 import mysql.connector
-import json
+import simplejson as json
 import threading
 import os
 import config as c
