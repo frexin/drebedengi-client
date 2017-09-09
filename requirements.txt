@@ -1,6 +1,6 @@
 bs4
 requests
-mysql-connector
+python-mysql-connector
 flask
 simplejson
 onedrivesdk
