@@ -5,4 +5,4 @@ flask
 simplejson
 onedrivesdk
 python-pushover
-uswgi
+uwsgi
