@@ -1,0 +1,7 @@
+bs4
+requests
+mysql-connector
+flask
+simplejson
+onedrivesdk
+pushover
