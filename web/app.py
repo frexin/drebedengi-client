@@ -84,5 +84,6 @@ def attach_categories():
 
     return "OK"
 
-monitor_files()
-app.run()
+if __name__ == "__main__":
+    monitor_files()
+    app.run()
