@@ -34,6 +34,7 @@ def import_files(files):
 
 
 def monitor_files():
+    print('Watch new files')
     new_files = drive_client.download_new_files()
 
     if len(new_files):
@@ -84,6 +85,10 @@ def attach_categories():
 
     return "OK"
 
-if __name__ == "__main__":
+
+@app.before_first_request
+def _run_on_start():
     monitor_files()
+
+if __name__ == "__main__":
     app.run()
