@@ -27,7 +27,8 @@ class ReceiptProcessor:
 
             query = "INSERT INTO receipts (dt_create, dt_process, shop_name, total_amount, doc_number, filename) " \
                     "VALUES (FROM_UNIXTIME(%s), NOW(), %s, %s, %s, %s)"
-            args = (rc['dateTime'], rc['user'], rc['totalSum'], rc['fiscalDocumentNumber'], self.file_name)
+            shop_name = rc['user'] if rc['user'] else 'неизвестный'
+            args = (rc['dateTime'], shop_name, rc['totalSum'], rc['fiscalDocumentNumber'], self.file_name)
 
             try:
                 cursor = self.db_conn.cursor()
