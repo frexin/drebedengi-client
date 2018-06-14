@@ -78,6 +78,26 @@ class ReceiptProcessor:
         self.db_conn.commit()
 
     def handle_items(self, items):
+        items = self.prepare_items(items)
+
         for item in items:
             cat_id = self.find_category_for_item(item['name'])
             self.save_item(item, cat_id)
+
+    def prepare_items(self, items):
+        uniq_names = {}
+
+        for item in items:
+            key = item['name']
+
+            if key not in uniq_names:
+                uniq_names[key] = item
+            else:
+                olditem = uniq_names[key]
+                price = float(olditem['price'])
+                quantity = int(olditem['quantity'])
+
+                uniq_names[key]['price'] += price
+                uniq_names[key]['quantity'] += quantity
+
+        return uniq_names.values()
