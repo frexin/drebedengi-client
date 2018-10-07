@@ -43,7 +43,7 @@ class Drebedengi:
         f = open(filename, 'w', encoding='utf-8')
 
         for item in receipt_items:
-            price = round((item['price'] * float(item['quantity'])) / 100, 2) * -1
+            price = round(item['price'] / 100, 2) * -1
             name = item['name'] + ' ' + str(item['quantity']) + ' шт.'
             line = [str(price), 'руб', item['category'], 'Тинькоф', receipt_data['dt_create'].strftime('%Y-%m-%d %H:%M'),
                     name, '', '1']
