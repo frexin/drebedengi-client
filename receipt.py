@@ -1,6 +1,9 @@
 import simplejson as json
 import os
 import re
+import csv
+import datetime
+import random
 from mysql.connector import MySQLConnection, Error
 
 
@@ -21,9 +24,41 @@ class ReceiptProcessor:
         self.file_path = filepath
         self.file_name = os.path.split(filepath)[1]
 
+    def csv_to_dict(self, filename):
+        res = {'items': []}
+
+        with open(filename, newline='', encoding='utf-8') as csvfile:
+            counter = 0
+            totalsum = 0
+            reader = csv.reader(csvfile)
+
+            for row in reader:
+                if counter == 1:
+                    res['user'] = row[1]
+                    res['dateTime'] = datetime.datetime.strptime(row[0], "%d.%m.%y %H:%M").timestamp()
+                    res['fiscalDocumentNumber'] = random.randint(100000, 50000000)
+                if counter > 2:
+                    cost = row[2].replace(",", ".")
+                    cost = float(cost) * 100
+
+                    newitem = {'name': row[0], 'price': round(cost), 'quantity': row[1]}
+                    res['items'].append(newitem)
+
+                    price = row[3]
+                    totalsum = totalsum + float(price.replace(",", "."))
+
+                counter = counter + 1
+
+            res['totalSum'] = round(totalsum) * 100
+
+        return res
+
     def process_file(self):
         with open(self.file_path, encoding='utf-8') as json_data:
-            rc = json.load(json_data)
+            if self.file_path.find(".csv"):
+                rc = self.csv_to_dict(self.file_path)
+            else:
+                rc = json.load(json_data)
 
             query = "INSERT INTO receipts (dt_create, dt_process, shop_name, total_amount, doc_number, filename) " \
                     "VALUES (FROM_UNIXTIME(%s), NOW(), %s, %s, %s, %s)"
