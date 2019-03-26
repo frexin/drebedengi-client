@@ -14,10 +14,19 @@ auth_provider = onedrivesdk.AuthProvider(
     client_id=client_id,
     scopes=scopes)
 
+client = onedrivesdk.OneDriveClient(api_base_url, auth_provider, http_provider)
+# auth_url = client.auth_provider.get_auth_url(redirect_uri)
+# Ask for the code
+# print('Paste this URL into your browser, approve the app\'s access.')
+# print('Copy everything in the address bar after "code=", and paste it below.')
+# print(auth_url)
+# code = input('Paste code here: ')
+
+# client.auth_provider.authenticate(code, redirect_uri, client_secret)
+# auth_provider.save_session()
+
 auth_provider.load_session()
 auth_provider.refresh_token()
-
-client = onedrivesdk.OneDriveClient(api_base_url, auth_provider, http_provider)
 
 # print(client.item(id='root').subscriptions.request())
 

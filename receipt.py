@@ -41,11 +41,14 @@ class ReceiptProcessor:
                     cost = row[2].replace(",", ".")
                     cost = float(cost) * 100
 
-                    newitem = {'name': row[0], 'price': round(cost), 'quantity': row[1]}
+                    newitem = {'name': row[0], 'price': round(cost), 'quantity': float(row[1])}
                     res['items'].append(newitem)
 
                     price = row[3]
-                    totalsum = totalsum + float(price.replace(",", "."))
+                    price = price.replace(",", ".")
+                    price = price.replace("\xa0", "")
+
+                    totalsum = totalsum + float(price)
 
                 counter = counter + 1
 
@@ -55,7 +58,7 @@ class ReceiptProcessor:
 
     def process_file(self):
         with open(self.file_path, encoding='utf-8') as json_data:
-            if self.file_path.find(".csv"):
+            if self.file_path.find(".csv") != -1:
                 rc = self.csv_to_dict(self.file_path)
             else:
                 rc = json.load(json_data)
@@ -130,7 +133,7 @@ class ReceiptProcessor:
             else:
                 olditem = uniq_names[key]
                 price = float(olditem['price'])
-                quantity = int(olditem['quantity'])
+                quantity = float(olditem['quantity'])
 
                 uniq_names[key]['price'] += price
                 uniq_names[key]['quantity'] += quantity

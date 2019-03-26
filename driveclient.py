@@ -18,10 +18,10 @@ class DriveClient:
             client_id=c.ms_app_id,
             scopes=['wl.signin', 'wl.offline_access', 'onedrive.readwrite'])
 
+        self.client = onedrivesdk.OneDriveClient('https://api.onedrive.com/v1.0/', auth_provider, http_provider)
+
         auth_provider.load_session()
         auth_provider.refresh_token()
-
-        self.client = onedrivesdk.OneDriveClient('https://api.onedrive.com/v1.0/', auth_provider, http_provider)
 
     def download_new_files(self):
         new_files = []
